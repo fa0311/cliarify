@@ -20,5 +20,6 @@
   "[dart]": {
     "editor.defaultFormatter": "Dart-Code.dart-code"
   },
-  "dart.testAdditionalArgs": ["--enable-experiment=macros"]
+  "dart.testAdditionalArgs": ["--enable-experiment=macros"],
+  "dart.lineLength": 120
 }

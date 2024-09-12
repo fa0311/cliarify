@@ -2,3 +2,7 @@ include: package:lints/recommended.yaml
 analyzer:
   enable-experiment:
     - macros
+
+linter:
+  rules:
+    lines_longer_than_80_chars: false
