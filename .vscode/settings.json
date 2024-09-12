@@ -19,5 +19,6 @@
   },
   "[dart]": {
     "editor.defaultFormatter": "Dart-Code.dart-code"
-  }
+  },
+  "dart.testAdditionalArgs": ["--enable-experiment=macros"]
 }

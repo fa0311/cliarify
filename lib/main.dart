@@ -4,13 +4,13 @@ import 'package:cliarify/model.dart';
 
 @Cliarify()
 class Default extends CliarifyBase {
-  final aaa = StringArgs(
+  final aaa = StringOption(
     defaultsTo: 'aaa',
     abbr: "a",
     aliases: ['bbb'],
   );
 
-  final number = IntArgs(
+  final number = IntOption(
     defaultsTo: 0,
   );
 

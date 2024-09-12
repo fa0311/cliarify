@@ -22,7 +22,9 @@ abstract class CliarifyBase {
         parser.addFlag(
           key,
           abbr: value.abbr,
+          aliases: value.aliases,
           negatable: value.negatable,
+          defaultsTo: null,
         );
       } else {
         throw ArgumentError('Invalid field type');
@@ -33,11 +35,12 @@ abstract class CliarifyBase {
     for (final field in cliarifyOptionFields.entries) {
       final key = field.key;
       final value = field.value;
-      final resultValue = results.options.contains(key) ? results[key] : null;
       if (value is OptionArgs) {
-        value.value = value.parse(resultValue);
+        final data = results.options.contains(key) ? results.option(key) : null;
+        value.value = value.parse(data);
       } else if (value is FlagArgs) {
-        value.value = value.parse(resultValue);
+        final data = results.options.contains(key) ? results.flag(key) : null;
+        value.value = value.parse(data);
       } else {
         throw ArgumentError('Invalid field type');
       }

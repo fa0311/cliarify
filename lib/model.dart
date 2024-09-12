@@ -12,8 +12,6 @@ class CliarifyFormatException implements Exception {
 mixin DefaultValueParser<T> {
   T? get defaultsTo;
   T orThrow(T? input) {
-    print('input: $input');
-    print('defaultsTo: $defaultsTo');
     final value = input ?? defaultsTo;
     if (value == null) {
       throw CliarifyFormatException('No default value');
@@ -104,51 +102,58 @@ abstract class OptionArgs<T> extends Args<T> {
   T parse(String? input);
 }
 
-abstract class FlagArgsBase<T> extends Args<T> {
+abstract class FlagArgs<T> extends Args<T> {
   final bool negatable;
 
-  FlagArgsBase({
-    this.negatable = true,
+  FlagArgs({
+    this.negatable = false,
     super.aliases,
     super.abbr,
   });
   T parse(bool? input);
 }
 
-class NullableFlagArgs extends FlagArgsBase<bool?> {
-  NullableFlagArgs({
-    super.negatable,
+class BoolFlag extends FlagArgs<bool> with DefaultValueParser<bool> {
+  BoolFlag({
     super.aliases,
     super.abbr,
-  });
-  @override
-  bool? parse(bool? input) => input;
-  @override
-  String getHelp() {
-    return 'bool';
-  }
-}
-
-class FlagArgs extends FlagArgsBase<bool> with DefaultValueParser<bool> {
-  FlagArgs({
-    super.negatable,
-    super.aliases,
-    super.abbr,
-    this.defaultsTo,
+    super.negatable = false,
+    this.defaultsTo = false,
   });
   @override
   final bool? defaultsTo;
+
   @override
   bool parse(bool? input) => orThrow(input);
+
   @override
   String getHelp() {
     return 'bool';
   }
 }
 
-class StringArgs extends OptionArgs<String>
+class NullableBoolFlag extends FlagArgs<bool?> {
+  NullableBoolFlag({
+    super.aliases,
+    super.abbr,
+    super.negatable = false,
+    this.defaultsTo = false,
+  });
+
+  final bool? defaultsTo;
+
+  @override
+  bool? parse(bool? input) => input ?? defaultsTo;
+
+  @override
+  String getHelp() {
+    return 'bool';
+  }
+}
+
+class StringOption extends OptionArgs<String>
     with StringParser, DefaultValueParser<String> {
-  StringArgs({
+  StringOption({
     super.aliases,
     super.abbr,
     this.minLength,
@@ -169,8 +174,8 @@ class StringArgs extends OptionArgs<String>
   }
 }
 
-class NullableStringArgs extends OptionArgs<String?> with StringParser {
-  NullableStringArgs({
+class NullableStringOption extends OptionArgs<String?> with StringParser {
+  NullableStringOption({
     super.aliases,
     super.abbr,
     this.minLength,
@@ -191,8 +196,9 @@ class NullableStringArgs extends OptionArgs<String?> with StringParser {
   }
 }
 
-class IntArgs extends OptionArgs<int> with IntParser, DefaultValueParser<int> {
-  IntArgs({
+class IntOption extends OptionArgs<int>
+    with IntParser, DefaultValueParser<int> {
+  IntOption({
     super.aliases,
     super.abbr,
     this.minValue,
@@ -216,8 +222,8 @@ class IntArgs extends OptionArgs<int> with IntParser, DefaultValueParser<int> {
   }
 }
 
-class NullableIntArgs extends OptionArgs<int?> with IntParser {
-  NullableIntArgs({
+class NullableIntOption extends OptionArgs<int?> with IntParser {
+  NullableIntOption({
     super.aliases,
     super.abbr,
     this.minValue,
@@ -238,9 +244,9 @@ class NullableIntArgs extends OptionArgs<int?> with IntParser {
   }
 }
 
-class EnumArgs<T extends Enum> extends OptionArgs<T>
+class EnumOption<T extends Enum> extends OptionArgs<T>
     with EnumParser<T>, DefaultValueParser<T> {
-  EnumArgs({
+  EnumOption({
     required this.allowed,
     this.defaultsTo,
     super.aliases,
@@ -261,9 +267,9 @@ class EnumArgs<T extends Enum> extends OptionArgs<T>
   }
 }
 
-class NullableEnumArgs<T extends Enum> extends OptionArgs<T?>
+class NullableEnumOption<T extends Enum> extends OptionArgs<T?>
     with EnumParser<T> {
-  NullableEnumArgs({
+  NullableEnumOption({
     required this.allowed,
     super.aliases,
     super.abbr,

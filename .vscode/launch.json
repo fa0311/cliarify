@@ -4,7 +4,7 @@
       "name": "Dart",
       "request": "launch",
       "type": "dart",
-      "toolArgs": ["--enable-experiment=super-mixins"]
+      "toolArgs": ["--enable-experiment=macros"]
     }
   ]
 }
