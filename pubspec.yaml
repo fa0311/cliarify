@@ -7,6 +7,7 @@ environment:
   sdk: ^3.5.0
 
 dependencies:
+  args: ^2.5.0
   json: ^0.20.2
   macros: ^0.1.2-main.4
   # path: ^1.8.0

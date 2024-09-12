@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "name": "Dart",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--enable-experiment=super-mixins"]
+    }
+  ]
+}
