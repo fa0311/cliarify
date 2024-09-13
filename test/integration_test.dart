@@ -12,7 +12,7 @@ class TestString extends CliarifyBase {
   final abbrString = NullableStringOption(abbr: 'a');
 
   @override
-  run() {
+  cliarifyRun() {
     throw UnimplementedError();
   }
 }
@@ -26,7 +26,7 @@ class TestBool extends CliarifyBase {
   final abbrFlag = BoolFlag(abbr: 'a');
 
   @override
-  run() {
+  cliarifyRun() {
     throw UnimplementedError();
   }
 }

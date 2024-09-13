@@ -114,8 +114,11 @@ class HelpUtil {
           } else {
             line.add('${[...value.aliases, key].map((e) => '--$e').join(', ')}  ');
           }
-
-          line.add(defaultDescription == null ? '' : '[default: $defaultDescription]  ');
+          if (value is FlagArgs) {
+            line.add('');
+          } else {
+            line.add(defaultDescription == null ? '' : '[default: $defaultDescription]  ');
+          }
           line.add(enumDescription == null ? '' : '<options: $enumDescription>  ');
           line.add(value.description ?? '');
 
@@ -126,7 +129,7 @@ class HelpUtil {
     return res;
   }
 
-  void printHelp() {
+  String printHelp() {
     final table = helpParse();
     final maxLength = table.fold<List<int>>(List.filled(table.first.length, 0), (prev, element) {
       for (var i = 0; i < element.length; i++) {
@@ -137,23 +140,27 @@ class HelpUtil {
 
     final res = table.map((row) {
       return row.asMap().entries.map((e) {
-        final length = e.value.replaceAll(RegExp(r'\u001B\[\d+m'), '').length;
-        final space = ' ' * (maxLength[e.key] - length);
-        return '${config.bold(e.value)}$space';
+        if (e.key > 1) {
+          return e.value;
+        } else {
+          final length = e.value.replaceAll(RegExp(r'\u001B\[\d+m'), '').length;
+          final space = ' ' * (maxLength[e.key] - length);
+          return '${e.value}$space';
+        }
       }).join('');
     }).toList();
-    print(res.join('\n'));
+    return res.join('\n');
   }
 }
 
 abstract class CliarifyBase {
   Map<String, Args> get cliarifyOptionFields => {};
 
-  void help([CliarifyColorPalette? config]) {
-    HelpUtil(cliarifyOptionFields, config).printHelp();
+  String cliarifyHelp([CliarifyColorPalette? config]) {
+    return HelpUtil(cliarifyOptionFields, config).printHelp();
   }
 
-  run();
+  cliarifyRun();
 
   cliarifyParseArgs(List<String> args) {
     final parser = ArgParser();

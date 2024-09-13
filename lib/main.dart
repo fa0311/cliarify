@@ -1,22 +1,27 @@
 import 'package:cliarify/base.dart';
 import 'package:cliarify/macro/macro.dart';
+import 'package:cliarify/model/flag.dart';
 import 'package:cliarify/model/option.dart';
 
 @Cliarify()
 class Default extends CliarifyBase {
-  final aaa = StringOption(
+  final sayConsole = StringOption(
     defaultsTo: 'aaa',
-    abbr: "a",
-    aliases: ['bbb'],
+    abbr: "s",
+    aliases: ['say'],
+    description: 'Say something to the console',
   );
-
-  final number = IntOption(
-    defaultsTo: 0,
+  final help = BoolFlag(
+    abbr: "h",
+    description: 'Prints help information',
   );
 
   @override
-  void run() {
-    print(aaa.value);
-    print(number.value);
+  void cliarifyRun() {
+    if (help.value) {
+      print(cliarifyHelp());
+      return;
+    }
+    print(sayConsole.value);
   }
 }

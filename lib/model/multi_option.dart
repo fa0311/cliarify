@@ -6,6 +6,7 @@ class StringMultiOptionArgs extends MultiOptionArgs<List<String>>
   StringMultiOptionArgs({
     super.aliases,
     super.abbr,
+    super.description,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -35,6 +36,7 @@ class IntMultiOptionArgs extends MultiOptionArgs<List<int>>
   IntMultiOptionArgs({
     super.aliases,
     super.abbr,
+    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -64,6 +66,7 @@ class DoubleMultiOptionArgs extends MultiOptionArgs<List<double>>
   DoubleMultiOptionArgs({
     super.aliases,
     super.abbr,
+    super.description,
     this.minValue,
     this.maxValue,
     this.validator,

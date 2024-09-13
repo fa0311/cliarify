@@ -30,6 +30,7 @@ abstract class OptionArgs<T> extends ArgsDescription<T> {
   OptionArgs({
     super.aliases,
     super.abbr,
+    super.description,
   });
   T parse(String? input);
 }
@@ -40,6 +41,7 @@ abstract class FlagArgs<T> extends ArgsDescription<T> {
     this.negatable = false,
     super.aliases,
     super.abbr,
+    super.description,
   });
   T parse(bool? input);
 }
@@ -48,6 +50,7 @@ abstract class MultiOptionArgs<T> extends ArgsDescription<List<T>> {
   MultiOptionArgs({
     super.aliases,
     super.abbr,
+    super.description,
   });
   T parse(List<String>? input);
 }

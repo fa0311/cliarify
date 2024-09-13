@@ -6,6 +6,7 @@ class StringOption extends OptionArgs<String>
   StringOption({
     super.aliases,
     super.abbr,
+    super.description,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -32,6 +33,7 @@ class NullableStringOption extends OptionArgs<String?>
   NullableStringOption({
     super.aliases,
     super.abbr,
+    super.description,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -54,6 +56,7 @@ class IntOption extends OptionArgs<int> with IntParser, DefaultValue<int, String
   IntOption({
     super.aliases,
     super.abbr,
+    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -80,6 +83,7 @@ class NullableIntOption extends OptionArgs<int?>
   NullableIntOption({
     super.aliases,
     super.abbr,
+    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -105,6 +109,7 @@ class EnumOption<T extends Enum> extends OptionArgs<T>
     required this.allowed,
     super.aliases,
     super.abbr,
+    super.description,
     this.validator,
     this.parsedValidator,
     this.stringify,
@@ -128,6 +133,7 @@ class NullableEnumOption<T extends Enum> extends OptionArgs<T?>
     required this.allowed,
     super.aliases,
     super.abbr,
+    super.description,
     this.validator,
     this.parsedValidator,
     this.stringify,

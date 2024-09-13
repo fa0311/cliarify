@@ -14,13 +14,13 @@ class TestHelp extends CliarifyBase {
   final flag = BoolFlag(abbr: 'f', negatable: true);
 
   @override
-  run() {
+  cliarifyRun() {
     throw UnimplementedError();
   }
 }
 
 void main() {
   test('Command Help', () {
-    TestHelp().help();
+    TestHelp().cliarifyHelp();
   });
 }

@@ -10,7 +10,7 @@ class TestString extends CliarifyBase {
   final string = StringOption();
 
   @override
-  run() {
+  cliarifyRun() {
     throw UnimplementedError();
   }
 }
@@ -20,7 +20,7 @@ class TestBool extends CliarifyBase {
   final bool = BoolFlag(defaultsTo: null);
 
   @override
-  run() {
+  cliarifyRun() {
     throw UnimplementedError();
   }
 }

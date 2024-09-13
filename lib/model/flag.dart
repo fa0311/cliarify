@@ -5,6 +5,7 @@ class BoolFlag extends FlagArgs<bool> with DefaultValue<bool, bool>, SingleValue
   BoolFlag({
     super.aliases,
     super.abbr,
+    super.description,
     super.negatable = false,
     this.defaultsTo = false,
   });
@@ -22,6 +23,7 @@ class NullableBoolFlag extends FlagArgs<bool?> with NullableValue<bool?, bool>, 
   NullableBoolFlag({
     super.aliases,
     super.abbr,
+    super.description,
     super.negatable = false,
   });
   @override
