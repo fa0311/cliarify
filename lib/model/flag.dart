@@ -11,11 +11,11 @@ class BoolFlag extends FlagArgs<bool> with DefaultValue<bool, bool>, SingleValue
   @override
   final bool? defaultsTo;
   @override
+  bool parse(bool? input);
+  @override
   bool validate(bool input) => input;
   @override
-  String getHelp() {
-    return 'bool';
-  }
+  String valueToString(bool value) => value.toString();
 }
 
 class NullableBoolFlag extends FlagArgs<bool?> with NullableValue<bool?, bool>, SingleValue<bool?, bool, bool?> {
@@ -23,13 +23,11 @@ class NullableBoolFlag extends FlagArgs<bool?> with NullableValue<bool?, bool>, 
     super.aliases,
     super.abbr,
     super.negatable = false,
-    this.defaultsTo = false,
   });
-  final bool? defaultsTo;
   @override
-  bool? validate(bool? input) => input;
+  bool? validate(bool input) => input;
   @override
-  String getHelp() {
-    return 'bool';
-  }
+  String? defaultConvert(String Function(bool? input) validate) => null;
+  @override
+  String valueToString(bool? value) => value.toString();
 }

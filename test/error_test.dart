@@ -28,7 +28,7 @@ class TestBool extends CliarifyBase {
 void main() {
   test('Command Parse String', () {
     try {
-      final _ = TestString.cliarifyFromArgs(["-a"]);
+      final _ = TestString().cliarifyParseArgs(["-a"]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());
@@ -36,7 +36,7 @@ void main() {
   });
   test('Command Parse Bool', () {
     try {
-      final _ = TestBool.cliarifyFromArgs([]);
+      final _ = TestBool().cliarifyParseArgs([]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());

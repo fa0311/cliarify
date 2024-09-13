@@ -8,6 +8,9 @@ class StringOption extends OptionArgs<String>
     super.abbr,
     this.minLength,
     this.maxLength,
+    this.pattern,
+    this.validator,
+    this.stringify,
     this.defaultsTo,
   });
   @override
@@ -15,11 +18,13 @@ class StringOption extends OptionArgs<String>
   @override
   final int? minLength;
   @override
-  final String? defaultsTo;
+  final RegExp? pattern;
   @override
-  String getHelp() {
-    return 'string';
-  }
+  final bool Function(String)? validator;
+  @override
+  final String Function(String input)? stringify;
+  @override
+  final String? defaultsTo;
 }
 
 class NullableStringOption extends OptionArgs<String?>
@@ -29,15 +34,20 @@ class NullableStringOption extends OptionArgs<String?>
     super.abbr,
     this.minLength,
     this.maxLength,
+    this.pattern,
+    this.validator,
+    this.stringify,
   });
   @override
   final int? maxLength;
   @override
   final int? minLength;
   @override
-  String getHelp() {
-    return 'string';
-  }
+  final RegExp? pattern;
+  @override
+  final bool Function(String)? validator;
+  @override
+  final String Function(String input)? stringify;
 }
 
 class IntOption extends OptionArgs<int> with IntParser, DefaultValue<int, String>, SingleValue<int, String, int> {
@@ -46,6 +56,9 @@ class IntOption extends OptionArgs<int> with IntParser, DefaultValue<int, String
     super.abbr,
     this.minValue,
     this.maxValue,
+    this.validator,
+    this.parsedValidator,
+    this.stringify,
     this.defaultsTo,
   });
   @override
@@ -53,11 +66,13 @@ class IntOption extends OptionArgs<int> with IntParser, DefaultValue<int, String
   @override
   final int? maxValue;
   @override
-  final int? defaultsTo;
+  final bool Function(String)? validator;
   @override
-  String getHelp() {
-    return 'int';
-  }
+  final bool Function(int)? parsedValidator;
+  @override
+  final String Function(int input)? stringify;
+  @override
+  final int? defaultsTo;
 }
 
 class NullableIntOption extends OptionArgs<int?>
@@ -67,6 +82,9 @@ class NullableIntOption extends OptionArgs<int?>
     super.abbr,
     this.minValue,
     this.maxValue,
+    this.validator,
+    this.stringify,
+    this.parsedValidator,
   });
 
   @override
@@ -74,27 +92,34 @@ class NullableIntOption extends OptionArgs<int?>
   @override
   final int? maxValue;
   @override
-  String getHelp() {
-    return 'int';
-  }
+  final bool Function(String)? validator;
+  @override
+  final String Function(int input)? stringify;
+  @override
+  final bool Function(int)? parsedValidator;
 }
 
 class EnumOption<T extends Enum> extends OptionArgs<T>
     with EnumParser<T>, DefaultValue<T, String>, SingleValue<T, String, T> {
   EnumOption({
     required this.allowed,
-    this.defaultsTo,
     super.aliases,
     super.abbr,
+    this.validator,
+    this.parsedValidator,
+    this.stringify,
+    this.defaultsTo,
   });
   @override
   final T? defaultsTo;
   @override
   final Iterable<T> allowed;
   @override
-  String getHelp() {
-    return allowed.map((e) => e.name).join('|');
-  }
+  final bool Function(String)? validator;
+  @override
+  final bool Function(T)? parsedValidator;
+  @override
+  final String Function(T input)? stringify;
 }
 
 class NullableEnumOption<T extends Enum> extends OptionArgs<T?>
@@ -103,11 +128,16 @@ class NullableEnumOption<T extends Enum> extends OptionArgs<T?>
     required this.allowed,
     super.aliases,
     super.abbr,
+    this.validator,
+    this.parsedValidator,
+    this.stringify,
   });
   @override
   final Iterable<T> allowed;
   @override
-  String getHelp() {
-    return allowed.map((e) => e.name).join('|');
-  }
+  final bool Function(String)? validator;
+  @override
+  final bool Function(T)? parsedValidator;
+  @override
+  final String Function(T input)? stringify;
 }

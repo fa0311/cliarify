@@ -1,4 +1,5 @@
 import 'package:args/args.dart';
+import 'package:cliarify/color.dart';
 import 'package:cliarify/error.dart';
 import 'package:cliarify/model/base.dart';
 import 'package:cliarify/model/parser.dart';
@@ -84,25 +85,81 @@ class CliarifyUtil {
       }
     }
   }
+}
 
-  static void printHelp(Map<String, Args> fields) {
+class HelpUtil {
+  final CliarifyColorPalette config;
+  final Map<String, Args> fields;
+  HelpUtil(this.fields, [CliarifyColorPalette? config]) : config = CliarifyColorPalette();
+
+  List<List<String>> helpParse() {
+    final res = <List<String>>[];
     for (final field in fields.entries) {
       final key = field.key;
       final value = field.value;
-      print('$key: ${value.getHelp()}');
+      if (!value.hidden) {
+        if (value is ArgsDescription) {
+          final defaultDescription = value.defaultDescription();
+          final enumDescription = value.enumDescription();
+          final line = <String>[];
+
+          line.add(value.abbr == null ? '' : '-${value.abbr}, ');
+
+          if (value is FlagArgs && value.negatable) {
+            line.add([...value.aliases, key].map((e) => '--[no-]$e').join(', '));
+          } else if (enumDescription != null) {
+            line.add('${[...value.aliases, key].map((e) => '--$e').join(', ')}=${config.underline("<options>  ")}');
+          } else if (value is OptionArgs) {
+            line.add('${[...value.aliases, key].map((e) => '--$e').join(', ')}=${config.underline("<value>")}  ');
+          } else {
+            line.add('${[...value.aliases, key].map((e) => '--$e').join(', ')}  ');
+          }
+
+          line.add(defaultDescription == null ? '' : '[default: $defaultDescription]  ');
+          line.add(enumDescription == null ? '' : '<options: $enumDescription>  ');
+          line.add(value.description ?? '');
+
+          res.add(line);
+        }
+      }
     }
+    return res;
+  }
+
+  void printHelp() {
+    final table = helpParse();
+    final maxLength = table.fold<List<int>>(List.filled(table.first.length, 0), (prev, element) {
+      for (var i = 0; i < element.length; i++) {
+        prev[i] = prev[i] > element[i].length ? prev[i] : element[i].length;
+      }
+      return prev;
+    });
+
+    final res = table.map((row) {
+      return row.asMap().entries.map((e) {
+        final length = e.value.replaceAll(RegExp(r'\u001B\[\d+m'), '').length;
+        final space = ' ' * (maxLength[e.key] - length);
+        return '${config.bold(e.value)}$space';
+      }).join('');
+    }).toList();
+    print(res.join('\n'));
   }
 }
 
 abstract class CliarifyBase {
   Map<String, Args> get cliarifyOptionFields => {};
 
+  void help([CliarifyColorPalette? config]) {
+    HelpUtil(cliarifyOptionFields, config).printHelp();
+  }
+
   run();
 
-  CliarifyBase.cliarifyFromArgs(List<String> args) {
+  cliarifyParseArgs(List<String> args) {
     final parser = ArgParser();
     CliarifyUtil.parserInit(parser: parser, args: args, fields: cliarifyOptionFields);
     final results = CliarifyUtil.parse(parser: parser, args: args);
     CliarifyUtil.build(fields: cliarifyOptionFields, results: results);
+    return this;
   }
 }

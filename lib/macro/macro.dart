@@ -30,7 +30,9 @@ macro class Cliarify implements ClassDeclarationsMacro {
   get cliarifyOptionFields => {
 $fieldsMap
   };
-  $className.cliarifyFromArgs(List<String> args) : super.cliarifyFromArgs(args);
+  $className cliarifyParseArgs(List<String> args){
+    return super.cliarifyParseArgs(args);
+  }
 '''));
   }
 }
