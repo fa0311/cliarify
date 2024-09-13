@@ -1,6 +1,6 @@
 import 'package:cliarify/base.dart';
 import 'package:cliarify/macro/macro.dart';
-import 'package:cliarify/model.dart';
+import 'package:cliarify/model/option.dart';
 
 @Cliarify()
 class Default extends CliarifyBase {

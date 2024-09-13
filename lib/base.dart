@@ -1,66 +1,7 @@
 import 'package:args/args.dart';
-import 'package:cliarify/color.dart';
-import 'package:cliarify/model.dart';
-
-class CliarifyArgValue {
-  final String message;
-  final String name;
-  final String description;
-
-  CliarifyArgValue({
-    required this.message,
-    required this.name,
-    required this.description,
-  });
-}
-
-class CliarifyErrorPrinterMessage {
-  final CliarifyColorPalette config;
-  static pluralize(int len, String singular, String plural) {
-    return len == 1 ? singular : plural;
-  }
-
-  String indent(List<String> text) {
-    return text.map((e) => ' ${config.red("»")}   $e').join('\n');
-  }
-
-  String seeMoreHelp() {
-    return 'See more help with --help';
-  }
-
-  String missingErrorTitle(int len) {
-    return 'Error: Missing $len required ${pluralize(len, 'arg', 'args')}:';
-  }
-
-  String argParse(CliarifyArgValue data) {
-    return '${data.name}  ${data.description}';
-  }
-
-  String missingError(CliarifyMissingArgumentException data) {
-    final len = data.value.length;
-    final args = data.value.map((e) => argParse(e)).toList();
-    return indent([missingErrorTitle(len), ...args, seeMoreHelp()]);
-  }
-
-  CliarifyErrorPrinterMessage([CliarifyColorPalette? config]) : config = CliarifyColorPalette();
-}
-
-abstract class CliarifyException implements Exception {
-  CliarifyException();
-  String printError([CliarifyErrorPrinterMessage? config]);
-}
-
-class CliarifyMissingArgumentException implements CliarifyException {
-  final List<CliarifyArgValue> value;
-
-  CliarifyMissingArgumentException(this.value);
-
-  @override
-  String printError([CliarifyErrorPrinterMessage? config]) {
-    final conf = config ?? CliarifyErrorPrinterMessage();
-    return conf.missingError(this);
-  }
-}
+import 'package:cliarify/error.dart';
+import 'package:cliarify/model/base.dart';
+import 'package:cliarify/model/parser.dart';
 
 class CliarifyUtil {
   static void parserInit({
@@ -87,17 +28,37 @@ class CliarifyUtil {
           negatable: value.negatable,
           defaultsTo: null,
         );
+      } else if (value is MultiOptionArgs) {
+        parser.addMultiOption(
+          key,
+          abbr: value.abbr,
+          aliases: value.aliases,
+          defaultsTo: null,
+        );
       } else {
         throw ArgumentError('Invalid field type');
       }
     }
   }
 
-  static void parse({
+  static ArgResults parse({
+    required ArgParser parser,
+    required List<String> args,
+  }) {
+    try {
+      return parser.parse(args);
+    } on ArgParserException catch (e) {
+      throw CliarifyMissingArgumentException(
+        message: e.message,
+        name: e.source,
+      );
+    }
+  }
+
+  static void build({
     required Map<String, Args> fields,
     required ArgResults results,
   }) {
-    final errors = <CliarifyArgValue>[];
     for (final field in fields.entries) {
       final key = field.key;
       final value = field.value;
@@ -108,19 +69,19 @@ class CliarifyUtil {
         } else if (value is FlagArgs) {
           final data = results.options.contains(key) ? results.flag(key) : null;
           value.value = value.parse(data);
+        } else if (value is MultiOptionArgs) {
+          final data = results.options.contains(key) ? results.multiOption(key) : null;
+          value.value = value.parse(data);
         } else {
           throw ArgumentError('Invalid field type');
         }
       } on CliarifyParseException catch (e) {
-        errors.add(CliarifyArgValue(
+        throw CliarifyMissingArgumentException(
           message: e.message,
           name: key,
-          description: value.getHelp(),
-        ));
+          description: "$key is required",
+        );
       }
-    }
-    if (errors.isNotEmpty) {
-      throw CliarifyMissingArgumentException(errors);
     }
   }
 
@@ -141,7 +102,7 @@ abstract class CliarifyBase {
   CliarifyBase.cliarifyFromArgs(List<String> args) {
     final parser = ArgParser();
     CliarifyUtil.parserInit(parser: parser, args: args, fields: cliarifyOptionFields);
-    final results = parser.parse(args);
-    CliarifyUtil.parse(fields: cliarifyOptionFields, results: results);
+    final results = CliarifyUtil.parse(parser: parser, args: args);
+    CliarifyUtil.build(fields: cliarifyOptionFields, results: results);
   }
 }
