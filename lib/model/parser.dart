@@ -1,12 +1,8 @@
+import 'package:cliarify/error.dart';
+
 class CliarifyParseException implements Exception {
-  final String message;
-
-  CliarifyParseException(this.message);
-
-  @override
-  String toString() {
-    return 'CliarifyFormatException: $message';
-  }
+  final String Function(CliarifyErrorPrinterMessage) title;
+  CliarifyParseException(this.title);
 }
 
 mixin SingleValue<T, U, V> {
@@ -52,7 +48,7 @@ mixin DefaultValue<T, U> {
     } else if (defaultsTo != null) {
       return defaultsTo!;
     } else {
-      throw CliarifyParseException('Value is required');
+      throw CliarifyParseException((e) => e.requiredArgumentMissingError);
     }
   }
 }
@@ -80,13 +76,13 @@ mixin StringParser {
 
   String validate(String input) {
     if (minLength != null && input.length < minLength!) {
-      throw CliarifyParseException('String is too short');
+      throw CliarifyParseException((e) => e.stringTooShortError);
     }
     if (maxLength != null && input.length > maxLength!) {
-      throw CliarifyParseException('String is too long');
+      throw CliarifyParseException((e) => e.stringTooLongError);
     }
     if (pattern != null && !pattern!.hasMatch(input)) {
-      throw CliarifyParseException('String does not match pattern');
+      throw CliarifyParseException((e) => e.stringPatternMismatchError);
     }
     return input;
   }
@@ -105,23 +101,23 @@ mixin IntParser {
 
   int validate(String input) {
     if (input.isEmpty) {
-      throw CliarifyParseException('Empty string is not allowed');
+      throw CliarifyParseException((e) => e.emptyStringNotAllowedError);
     }
     if (int.tryParse(input) == null) {
-      throw CliarifyParseException('Not a valid number');
+      throw CliarifyParseException((e) => e.invalidNumberError);
     }
     final parsed = int.parse(input);
     if (minValue != null && parsed < minValue!) {
-      throw CliarifyParseException('Number is too small');
+      throw CliarifyParseException((e) => e.numberTooSmallError);
     }
     if (maxValue != null && parsed > maxValue!) {
-      throw CliarifyParseException('Number is too big');
+      throw CliarifyParseException((e) => e.numberTooLargeError);
     }
-    if (validator != null && !validator!(input)) {
-      throw CliarifyParseException('Number does not match pattern');
+    if (validator != null) {
+      validator!(input);
     }
-    if (parsedValidator != null && !parsedValidator!(parsed)) {
-      throw CliarifyParseException('Number does not match pattern');
+    if (parsedValidator != null) {
+      !parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -140,23 +136,24 @@ mixin DoubleParser {
 
   double validate(String input) {
     if (input.isEmpty) {
-      throw CliarifyParseException('Empty string is not allowed');
+      throw CliarifyParseException((e) => e.emptyStringNotAllowedError);
     }
     if (double.tryParse(input) == null) {
-      throw CliarifyParseException('Not a valid number');
+      throw CliarifyParseException((e) => e.invalidNumberError);
     }
     final parsed = double.parse(input);
     if (minValue != null && parsed < minValue!) {
-      throw CliarifyParseException('Number is too small');
+      throw CliarifyParseException((e) => e.numberTooSmallError);
     }
     if (maxValue != null && parsed > maxValue!) {
-      throw CliarifyParseException('Number is too big');
+      throw CliarifyParseException((e) => e.numberTooLargeError);
     }
-    if (validator != null && !validator!(input)) {
-      throw CliarifyParseException('Number does not match pattern');
+
+    if (validator != null) {
+      validator!(input);
     }
-    if (parsedValidator != null && !parsedValidator!(parsed)) {
-      throw CliarifyParseException('Number does not match pattern');
+    if (parsedValidator != null) {
+      !parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -175,23 +172,23 @@ mixin NumParser {
 
   num validate(String input) {
     if (input.isEmpty) {
-      throw CliarifyParseException('Empty string is not allowed');
+      throw CliarifyParseException((e) => e.emptyStringNotAllowedError);
     }
     if (num.tryParse(input) == null) {
-      throw CliarifyParseException('Not a valid number');
+      throw CliarifyParseException((e) => e.invalidNumberError);
     }
     final parsed = num.parse(input);
     if (minValue != null && parsed < minValue!) {
-      throw CliarifyParseException('Number is too small');
+      throw CliarifyParseException((e) => e.numberTooSmallError);
     }
     if (maxValue != null && parsed > maxValue!) {
-      throw CliarifyParseException('Number is too big');
+      throw CliarifyParseException((e) => e.numberTooLargeError);
     }
-    if (validator != null && !validator!(input)) {
-      throw CliarifyParseException('Number does not match pattern');
+    if (validator != null) {
+      validator!(input);
     }
-    if (parsedValidator != null && !parsedValidator!(parsed)) {
-      throw CliarifyParseException('Number does not match pattern');
+    if (parsedValidator != null) {
+      !parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -210,23 +207,23 @@ mixin DateTimeParser {
 
   DateTime validate(String input) {
     if (input.isEmpty) {
-      throw CliarifyParseException('Empty string is not allowed');
+      throw CliarifyParseException((e) => e.emptyStringNotAllowedError);
     }
     if (DateTime.tryParse(input) == null) {
-      throw CliarifyParseException('Not a valid date');
+      throw CliarifyParseException((e) => e.invalidDateError);
     }
     final parsed = DateTime.parse(input);
     if (minValue != null && parsed.isBefore(minValue!)) {
-      throw CliarifyParseException('Date is too early');
+      throw CliarifyParseException((e) => e.dateTooEarlyError);
     }
     if (maxValue != null && parsed.isAfter(maxValue!)) {
-      throw CliarifyParseException('Date is too late');
+      throw CliarifyParseException((e) => e.dateTooLateError);
     }
-    if (validator != null && !validator!(input)) {
-      throw CliarifyParseException('Date does not match pattern');
+    if (validator != null) {
+      validator!(input);
     }
-    if (parsedValidator != null && !parsedValidator!(parsed)) {
-      throw CliarifyParseException('Date does not match pattern');
+    if (parsedValidator != null) {
+      !parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -245,23 +242,23 @@ mixin MillisecondsDurationParser {
 
   Duration validate(String input) {
     if (input.isEmpty) {
-      throw CliarifyParseException('Empty string is not allowed');
+      throw CliarifyParseException((e) => e.emptyStringNotAllowedError);
     }
     if (int.tryParse(input) == null) {
-      throw CliarifyParseException('Not a valid duration');
+      throw CliarifyParseException((e) => e.invalidDurationError);
     }
     final parsed = Duration(milliseconds: int.parse(input));
     if (minValue != null && parsed < minValue!) {
-      throw CliarifyParseException('Duration is too short');
+      throw CliarifyParseException((e) => e.durationTooShortError);
     }
     if (maxValue != null && parsed > maxValue!) {
-      throw CliarifyParseException('Duration is too long');
+      throw CliarifyParseException((e) => e.durationTooLongError);
     }
-    if (validator != null && !validator!(input)) {
-      throw CliarifyParseException('Duration does not match pattern');
+    if (validator != null) {
+      validator!(input);
     }
-    if (parsedValidator != null && !parsedValidator!(parsed)) {
-      throw CliarifyParseException('Duration does not match pattern');
+    if (parsedValidator != null) {
+      !parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -280,23 +277,23 @@ mixin UriParser {
 
   Uri validate(String input) {
     if (input.isEmpty) {
-      throw CliarifyParseException('Empty string is not allowed');
+      throw CliarifyParseException((e) => e.emptyStringNotAllowedError);
     }
     if (Uri.tryParse(input) == null) {
-      throw CliarifyParseException('Not a valid URI');
+      throw CliarifyParseException((e) => e.invalidUriError);
     }
     final parsed = Uri.parse(input);
     if (schemes != null && !schemes!.contains(parsed.scheme)) {
-      throw CliarifyParseException('URI scheme is not allowed');
+      throw CliarifyParseException((e) => e.uriSchemeNotAllowedError);
     }
     if (!allowRelative && !parsed.isAbsolute) {
-      throw CliarifyParseException('Relative URI is not allowed');
+      throw CliarifyParseException((e) => e.relativeUriNotAllowedError);
     }
-    if (validator != null && !validator!(input)) {
-      throw CliarifyParseException('URI does not match pattern');
+    if (validator != null) {
+      validator!(input);
     }
-    if (parsedValidator != null && !parsedValidator!(parsed)) {
-      throw CliarifyParseException('URI does not match pattern');
+    if (parsedValidator != null) {
+      !parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -318,17 +315,17 @@ mixin EnumParser<T extends Enum> {
 
   T validate(String input) {
     if (input.isEmpty) {
-      throw CliarifyParseException('Empty string is not allowed');
+      throw CliarifyParseException((e) => e.emptyStringNotAllowedError);
     }
     if (!allowed.any((element) => element.name == input)) {
-      throw CliarifyParseException('Not a valid enum value');
+      throw CliarifyParseException((e) => e.invalidEnumValueError);
     }
     final parsed = allowed.byName(input);
-    if (validator != null && !validator!(input)) {
-      throw CliarifyParseException('Enum value does not match pattern');
+    if (validator != null) {
+      validator!(input);
     }
-    if (parsedValidator != null && !parsedValidator!(parsed)) {
-      throw CliarifyParseException('Enum value does not match pattern');
+    if (parsedValidator != null) {
+      !parsedValidator!(parsed);
     }
     return parsed;
   }

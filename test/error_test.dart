@@ -6,8 +6,9 @@ import 'package:cliarify/model/option.dart';
 import 'package:test/test.dart';
 
 @Cliarify()
-class TestString extends CliarifyBase {
-  final string = StringOption();
+class TestOption extends CliarifyBase {
+  final string = StringOption(description: "This is a string");
+  final int = IntOption(description: "This is a number");
 
   @override
   cliarifyRun() {
@@ -16,8 +17,8 @@ class TestString extends CliarifyBase {
 }
 
 @Cliarify()
-class TestBool extends CliarifyBase {
-  final bool = BoolFlag(defaultsTo: null);
+class TestFlag extends CliarifyBase {
+  final bool = BoolFlag(defaultsTo: null, description: "This is a flag");
 
   @override
   cliarifyRun() {
@@ -26,17 +27,32 @@ class TestBool extends CliarifyBase {
 }
 
 void main() {
-  test('Command Parse String', () {
+  test('Command Parse Option', () {
     try {
-      final _ = TestString().cliarifyParseArgs(["-a"]);
+      final _ = TestOption().cliarifyParseArgs(["--aaaa"]);
+      fail('Expected an UnimplementedError to be thrown');
+    } on CliarifyException catch (e) {
+      print(e.printError());
+    }
+
+    try {
+      final _ = TestOption().cliarifyParseArgs([]);
+      fail('Expected an UnimplementedError to be thrown');
+    } on CliarifyException catch (e) {
+      print(e.printError());
+    }
+
+    try {
+      final _ = TestOption().cliarifyParseArgs(["--string", "a", "--int", "size"]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());
     }
   });
+
   test('Command Parse Bool', () {
     try {
-      final _ = TestBool().cliarifyParseArgs([]);
+      final _ = TestFlag().cliarifyParseArgs([]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());

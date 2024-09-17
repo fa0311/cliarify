@@ -45,12 +45,13 @@ class CliarifyUtil {
   static ArgResults parse({
     required ArgParser parser,
     required List<String> args,
+    required Map<String, Args> fields,
   }) {
     try {
       return parser.parse(args);
     } on ArgParserException catch (e) {
-      throw CliarifyMissingArgumentException(
-        message: e.message,
+      throw CliarifyException(
+        title: (config) => config.optionNotFoundError,
         name: e.source,
       );
     }
@@ -77,10 +78,10 @@ class CliarifyUtil {
           throw ArgumentError('Invalid field type');
         }
       } on CliarifyParseException catch (e) {
-        throw CliarifyMissingArgumentException(
-          message: e.message,
-          name: key,
-          description: "$key is required",
+        throw CliarifyException(
+          title: e.title,
+          name: results.actual(key) ?? "--$key",
+          description: value.description,
         );
       }
     }
@@ -165,8 +166,7 @@ abstract class CliarifyBase {
   cliarifyParseArgs(List<String> args) {
     final parser = ArgParser();
     CliarifyUtil.parserInit(parser: parser, args: args, fields: cliarifyOptionFields);
-    final results = CliarifyUtil.parse(parser: parser, args: args);
+    final results = CliarifyUtil.parse(parser: parser, args: args, fields: cliarifyOptionFields);
     CliarifyUtil.build(fields: cliarifyOptionFields, results: results);
-    return this;
   }
 }
