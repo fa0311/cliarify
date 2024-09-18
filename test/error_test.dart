@@ -29,21 +29,21 @@ class TestFlag extends CliarifyBase {
 void main() {
   test('Command Parse Option', () {
     try {
-      final _ = TestOption().cliarifyParseArgs(["--aaaa"]);
+      TestOption().cliarifyParseArgs<TestOption>(["--aaaa"]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());
     }
 
     try {
-      final _ = TestOption().cliarifyParseArgs([]);
+      TestOption().cliarifyParseArgs<TestOption>([]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());
     }
 
     try {
-      final _ = TestOption().cliarifyParseArgs(["--string", "a", "--int", "size"]);
+      TestOption().cliarifyParseArgs<TestOption>(["--string", "a", "--int", "size"]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());
@@ -52,7 +52,7 @@ void main() {
 
   test('Command Parse Bool', () {
     try {
-      final _ = TestFlag().cliarifyParseArgs([]);
+      TestFlag().cliarifyParseArgs<TestFlag>([]);
       fail('Expected an UnimplementedError to be thrown');
     } on CliarifyException catch (e) {
       print(e.printError());

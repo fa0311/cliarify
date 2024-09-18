@@ -1,151 +1,55 @@
 import 'package:args/args.dart';
 import 'package:cliarify/color.dart';
-import 'package:cliarify/message/error.dart';
 import 'package:cliarify/message/help.dart';
 import 'package:cliarify/model/base.dart';
-import 'package:cliarify/model/parser.dart';
-import 'package:cliarify/util.dart';
-
-class CliarifyUtil {
-  static void Function(CliarifyBase)? exclusiveFlagCheck({
-    required List<String> args,
-    required Map<String, Args> fields,
-  }) {
-    final parser = ArgParser();
-    for (final (key, value) in fields.tuple) {
-      if (value.exclusive != null) {
-        if (value is FlagArgs) {
-          parser.addFlag(
-            key,
-            abbr: value.abbr,
-            aliases: value.aliases,
-          );
-        }
-      }
-    }
-    try {
-      final results = parser.parse(args);
-      for (final (key, value) in fields.tuple) {
-        if (value is FlagArgs) {
-          final data = results.options.contains(key) ? results.flag(key) : false;
-          if (data && value.exclusive != null) {
-            return value.exclusive;
-          }
-        }
-      }
-    } on ArgParserException {
-      return null;
-    }
-    return null;
-  }
-
-  static void parserInit({
-    required ArgParser parser,
-    required List<String> args,
-    required Map<String, Args> fields,
-  }) {
-    for (final (key, value) in fields.tuple) {
-      if (value is OptionArgs) {
-        parser.addOption(
-          key,
-          abbr: value.abbr,
-          aliases: value.aliases,
-          defaultsTo: null,
-        );
-      } else if (value is FlagArgs) {
-        parser.addFlag(
-          key,
-          abbr: value.abbr,
-          aliases: value.aliases,
-          negatable: value.negatable,
-          defaultsTo: null,
-        );
-      } else if (value is MultiOptionArgs) {
-        parser.addMultiOption(
-          key,
-          abbr: value.abbr,
-          aliases: value.aliases,
-          defaultsTo: null,
-        );
-      } else {
-        throw ArgumentError('Invalid field type');
-      }
-    }
-  }
-
-  static ArgResults parse({
-    required ArgParser parser,
-    required List<String> args,
-    required Map<String, Args> fields,
-  }) {
-    try {
-      return parser.parse(args);
-    } on ArgParserException catch (e) {
-      throw CliarifyException(
-        title: (config) => config.optionNotFoundError,
-        name: e.source,
-      );
-    }
-  }
-
-  static void build({
-    required Map<String, Args> fields,
-    required ArgResults results,
-  }) {
-    for (final (key, value) in fields.tuple) {
-      try {
-        if (value is OptionArgs) {
-          final data = results.options.contains(key) ? results.option(key) : null;
-          value.value = value.parse(data);
-        } else if (value is FlagArgs) {
-          final data = results.options.contains(key) ? results.flag(key) : null;
-          value.value = value.parse(data);
-        } else if (value is MultiOptionArgs) {
-          final data = results.options.contains(key) ? results.multiOption(key) : null;
-          value.value = value.parse(data);
-        } else {
-          throw ArgumentError('Invalid field type');
-        }
-      } on CliarifyParseException catch (e) {
-        throw CliarifyException(
-          title: e.title,
-          name: results.actual(key) ?? "--$key",
-          description: value.description,
-        );
-      }
-    }
-  }
-}
+import 'package:cliarify/parser.dart';
 
 abstract class CliarifyBase {
   String get cliarifyGeneratedName;
   Map<String, Args> get cliarifyOptionGeneratedFields;
 
   String get cliarifyName => cliarifyGeneratedName;
+  String? get cliarifyDescription => null;
   Map<String, Args> get cliarifyOptionFields => cliarifyOptionGeneratedFields;
+  final List<String> cliarifyParentName = [];
 
-  String cliarifyHelp([CliarifyColorPalette? config]) {
+  String cliarifyHelp({
+    CliarifyColorPalette? config,
+    bool commands = true,
+    bool arguments = true,
+    bool usage = true,
+    bool flag = true,
+  }) {
     final palette = config ?? CliarifyColorPalette();
-    final help = CliarifyHelpPrinterMessage(cliarifyName, cliarifyOptionFields, config);
+    final help = CliarifyHelpPrinterMessage([...cliarifyParentName, cliarifyName], cliarifyOptionFields, config);
     final data = {
-      'USAGE': help.usageParse(),
-      'FLAG': help.flagParse(),
+      if (commands) 'COMMANDS': help.commandsParse(),
+      if (arguments) 'ARGUMENTS': help.argumentsParse(),
+      if (usage) 'USAGE': help.usageParse(),
+      if (flag) 'FLAG': help.flagParse(),
     };
-    return data.entries.map((e) => [palette.bold(e.key), e.value].join('\n')).join('\n\n');
+    final filter = data.entries.where((e) => e.value != null);
+    final line = [];
+    if (cliarifyDescription != null) {
+      line.add(cliarifyDescription!);
+    }
+    line.add(filter.map((e) => [palette.bold(e.key), e.value].join('\n')).join('\n\n'));
+    return line.join('\n\n');
   }
 
   cliarifyRun();
 
-  cliarifyParseArgs(List<String> args) {
-    final exclusive = CliarifyUtil.exclusiveFlagCheck(args: args, fields: cliarifyOptionFields);
-    if (exclusive == null) {
-      final parser = ArgParser();
-      CliarifyUtil.parserInit(parser: parser, args: args, fields: cliarifyOptionFields);
-      final results = CliarifyUtil.parse(parser: parser, args: args, fields: cliarifyOptionFields);
-      CliarifyUtil.build(fields: cliarifyOptionFields, results: results);
-      return this;
+  T? cliarifyParseArgs<T extends CliarifyBase>(List<String> args) {
+    CliarifyParser.subCommandInit(fields: cliarifyOptionFields);
+    final exclusive = CliarifyExclusiveParser.check(base: this, args: args, fields: cliarifyOptionFields);
+    if (exclusive) {
+      return null;
     } else {
-      exclusive(this);
+      final parser = ArgParser();
+      CliarifyParser.parserInit(parser: parser, fields: cliarifyOptionFields);
+      final results = CliarifyParser.parse(parser: parser, args: args, fields: cliarifyOptionFields);
+      final child = CliarifyParser.build(fields: cliarifyOptionFields, results: results);
+      return (child == null) ? this as T : child as T;
     }
   }
 }

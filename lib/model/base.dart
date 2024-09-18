@@ -1,30 +1,52 @@
 import 'package:cliarify/base.dart';
 
 abstract class Args<T> {
-  final List<String> aliases;
-  final String? abbr;
   final String? description;
   final bool hidden;
-  final void Function(CliarifyBase e)? exclusive;
 
   late T value;
 
   Args({
-    this.aliases = const [],
-    this.abbr,
     this.description,
     this.hidden = false,
-    this.exclusive,
   });
 }
 
-abstract class ArgsDescription<T> extends Args<T> {
-  ArgsDescription({
-    super.aliases,
-    super.abbr,
+class SubCommand extends Args<CliarifyBase> {
+  final CliarifyBase Function() builder;
+  SubCommand({
+    required this.builder,
     super.description,
     super.hidden,
-    super.exclusive,
+  });
+}
+
+abstract class PositionalArgs<T> extends Args<T> {
+  PositionalArgs({
+    super.description,
+  });
+  T parse(String? input);
+}
+
+abstract class RestArgs<T> extends Args<List<T>> {
+  RestArgs({
+    super.description,
+    super.hidden,
+  });
+  T parse(List<String>? input);
+}
+
+abstract class ArgsDescription<T> extends Args<T> {
+  final List<String> aliases;
+  final String? abbr;
+  final void Function(CliarifyBase e)? exclusive;
+
+  ArgsDescription({
+    this.aliases = const [],
+    this.abbr,
+    super.description,
+    super.hidden,
+    this.exclusive,
   });
 
   String? defaultDescription() => null;
