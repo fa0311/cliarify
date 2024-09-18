@@ -26,11 +26,17 @@ macro class Cliarify implements ClassDeclarationsMacro {
       return '      "${e.key}": ${e.value}';
     }).join(',\n');
 
+    final name = lowerCamelCaseToKebabCase(className);
+
     builder.declareInType(DeclarationCode.fromString('''
-  get cliarifyOptionFields => {
+  @override
+  get cliarifyGeneratedName => "$name";
+  @override
+  get cliarifyOptionGeneratedFields => {
 $fieldsMap
   };
-  $className cliarifyParseArgs(List<String> args){
+
+  $className? cliarifyParseArgs(List<String> args){
     return super.cliarifyParseArgs(args);
   }
 '''));

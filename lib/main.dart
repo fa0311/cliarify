@@ -14,14 +14,11 @@ class Default extends CliarifyBase {
   final help = BoolFlag(
     abbr: "h",
     description: 'Prints help information',
+    exclusive: (e) => print(e.cliarifyHelp()),
   );
 
   @override
   void cliarifyRun() {
-    if (help.value) {
-      print(cliarifyHelp());
-      return;
-    }
     print(sayConsole.value);
   }
 }

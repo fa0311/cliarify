@@ -9,7 +9,7 @@ enum TestEnum { apple, banana, cherry }
 @Cliarify()
 class TestHelp extends CliarifyBase {
   final example = StringOption(aliases: ['example-example'], abbr: 'e', defaultsTo: 'example');
-  final enumString = EnumOption(allowed: TestEnum.values, defaultsTo: TestEnum.apple);
+  final enumString = EnumOption(allowed: TestEnum.values, defaultsTo: TestEnum.apple, description: 'Enum Description');
   final nullableString = NullableStringOption(aliases: ['nullable-string'], abbr: 'n');
   final flag = BoolFlag(abbr: 'f', negatable: true);
 
@@ -21,6 +21,6 @@ class TestHelp extends CliarifyBase {
 
 void main() {
   test('Command Help', () {
-    TestHelp().cliarifyHelp();
+    print(TestHelp().cliarifyHelp());
   });
 }

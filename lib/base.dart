@@ -1,19 +1,50 @@
 import 'package:args/args.dart';
 import 'package:cliarify/color.dart';
-import 'package:cliarify/error.dart';
+import 'package:cliarify/message/error.dart';
+import 'package:cliarify/message/help.dart';
 import 'package:cliarify/model/base.dart';
 import 'package:cliarify/model/parser.dart';
+import 'package:cliarify/util.dart';
 
 class CliarifyUtil {
+  static void Function(CliarifyBase)? exclusiveFlagCheck({
+    required List<String> args,
+    required Map<String, Args> fields,
+  }) {
+    final parser = ArgParser();
+    for (final (key, value) in fields.tuple) {
+      if (value.exclusive != null) {
+        if (value is FlagArgs) {
+          parser.addFlag(
+            key,
+            abbr: value.abbr,
+            aliases: value.aliases,
+          );
+        }
+      }
+    }
+    try {
+      final results = parser.parse(args);
+      for (final (key, value) in fields.tuple) {
+        if (value is FlagArgs) {
+          final data = results.options.contains(key) ? results.flag(key) : false;
+          if (data && value.exclusive != null) {
+            return value.exclusive;
+          }
+        }
+      }
+    } on ArgParserException {
+      return null;
+    }
+    return null;
+  }
+
   static void parserInit({
     required ArgParser parser,
     required List<String> args,
     required Map<String, Args> fields,
   }) {
-    for (final field in fields.entries) {
-      final key = field.key;
-      final value = field.value;
-
+    for (final (key, value) in fields.tuple) {
       if (value is OptionArgs) {
         parser.addOption(
           key,
@@ -61,9 +92,7 @@ class CliarifyUtil {
     required Map<String, Args> fields,
     required ArgResults results,
   }) {
-    for (final field in fields.entries) {
-      final key = field.key;
-      final value = field.value;
+    for (final (key, value) in fields.tuple) {
       try {
         if (value is OptionArgs) {
           final data = results.options.contains(key) ? results.option(key) : null;
@@ -88,85 +117,35 @@ class CliarifyUtil {
   }
 }
 
-class HelpUtil {
-  final CliarifyColorPalette config;
-  final Map<String, Args> fields;
-  HelpUtil(this.fields, [CliarifyColorPalette? config]) : config = CliarifyColorPalette();
-
-  List<List<String>> helpParse() {
-    final res = <List<String>>[];
-    for (final field in fields.entries) {
-      final key = field.key;
-      final value = field.value;
-      if (!value.hidden) {
-        if (value is ArgsDescription) {
-          final defaultDescription = value.defaultDescription();
-          final enumDescription = value.enumDescription();
-          final line = <String>[];
-
-          line.add(value.abbr == null ? '' : '-${value.abbr}, ');
-
-          if (value is FlagArgs && value.negatable) {
-            line.add([...value.aliases, key].map((e) => '--[no-]$e').join(', '));
-          } else if (enumDescription != null) {
-            line.add('${[...value.aliases, key].map((e) => '--$e').join(', ')}=${config.underline("<options>  ")}');
-          } else if (value is OptionArgs) {
-            line.add('${[...value.aliases, key].map((e) => '--$e').join(', ')}=${config.underline("<value>")}  ');
-          } else {
-            line.add('${[...value.aliases, key].map((e) => '--$e').join(', ')}  ');
-          }
-          if (value is FlagArgs) {
-            line.add('');
-          } else {
-            line.add(defaultDescription == null ? '' : '[default: $defaultDescription]  ');
-          }
-          line.add(enumDescription == null ? '' : '<options: $enumDescription>  ');
-          line.add(value.description ?? '');
-
-          res.add(line);
-        }
-      }
-    }
-    return res;
-  }
-
-  String printHelp() {
-    final table = helpParse();
-    final maxLength = table.fold<List<int>>(List.filled(table.first.length, 0), (prev, element) {
-      for (var i = 0; i < element.length; i++) {
-        prev[i] = prev[i] > element[i].length ? prev[i] : element[i].length;
-      }
-      return prev;
-    });
-
-    final res = table.map((row) {
-      return row.asMap().entries.map((e) {
-        if (e.key > 1) {
-          return e.value;
-        } else {
-          final length = e.value.replaceAll(RegExp(r'\u001B\[\d+m'), '').length;
-          final space = ' ' * (maxLength[e.key] - length);
-          return '${e.value}$space';
-        }
-      }).join('');
-    }).toList();
-    return res.join('\n');
-  }
-}
-
 abstract class CliarifyBase {
-  Map<String, Args> get cliarifyOptionFields => {};
+  String get cliarifyGeneratedName;
+  Map<String, Args> get cliarifyOptionGeneratedFields;
+
+  String get cliarifyName => cliarifyGeneratedName;
+  Map<String, Args> get cliarifyOptionFields => cliarifyOptionGeneratedFields;
 
   String cliarifyHelp([CliarifyColorPalette? config]) {
-    return HelpUtil(cliarifyOptionFields, config).printHelp();
+    final palette = config ?? CliarifyColorPalette();
+    final help = CliarifyHelpPrinterMessage(cliarifyName, cliarifyOptionFields, config);
+    final data = {
+      'USAGE': help.usageParse(),
+      'FLAG': help.flagParse(),
+    };
+    return data.entries.map((e) => [palette.bold(e.key), e.value].join('\n')).join('\n\n');
   }
 
   cliarifyRun();
 
   cliarifyParseArgs(List<String> args) {
-    final parser = ArgParser();
-    CliarifyUtil.parserInit(parser: parser, args: args, fields: cliarifyOptionFields);
-    final results = CliarifyUtil.parse(parser: parser, args: args, fields: cliarifyOptionFields);
-    CliarifyUtil.build(fields: cliarifyOptionFields, results: results);
+    final exclusive = CliarifyUtil.exclusiveFlagCheck(args: args, fields: cliarifyOptionFields);
+    if (exclusive == null) {
+      final parser = ArgParser();
+      CliarifyUtil.parserInit(parser: parser, args: args, fields: cliarifyOptionFields);
+      final results = CliarifyUtil.parse(parser: parser, args: args, fields: cliarifyOptionFields);
+      CliarifyUtil.build(fields: cliarifyOptionFields, results: results);
+      return this;
+    } else {
+      exclusive(this);
+    }
   }
 }

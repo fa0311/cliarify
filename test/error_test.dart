@@ -1,6 +1,6 @@
 import 'package:cliarify/base.dart';
-import 'package:cliarify/error.dart';
 import 'package:cliarify/macro/macro.dart';
+import 'package:cliarify/message/error.dart';
 import 'package:cliarify/model/flag.dart';
 import 'package:cliarify/model/option.dart';
 import 'package:test/test.dart';

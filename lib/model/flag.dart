@@ -6,6 +6,7 @@ class BoolFlag extends FlagArgs<bool> with DefaultValue<bool, bool>, SingleValue
     super.aliases,
     super.abbr,
     super.description,
+    super.exclusive,
     super.negatable = false,
     this.defaultsTo = false,
   });
@@ -24,6 +25,7 @@ class NullableBoolFlag extends FlagArgs<bool?> with NullableValue<bool?, bool>, 
     super.aliases,
     super.abbr,
     super.description,
+    super.exclusive,
     super.negatable = false,
   });
   @override

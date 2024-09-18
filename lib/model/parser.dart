@@ -1,4 +1,4 @@
-import 'package:cliarify/error.dart';
+import 'package:cliarify/message/error.dart';
 
 class CliarifyParseException implements Exception {
   final String Function(CliarifyErrorPrinterMessage) title;
@@ -309,8 +309,8 @@ mixin EnumParser<T extends Enum> {
     return (stringify ?? (x) => x.name)(value);
   }
 
-  String? enumDescription() {
-    return allowed.map((e) => valueToString(e)).join('|');
+  List<String>? enumDescription() {
+    return allowed.map((e) => valueToString(e)).toList();
   }
 
   T validate(String input) {

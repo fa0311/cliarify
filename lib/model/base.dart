@@ -1,8 +1,11 @@
+import 'package:cliarify/base.dart';
+
 abstract class Args<T> {
   final List<String> aliases;
   final String? abbr;
   final String? description;
   final bool hidden;
+  final void Function(CliarifyBase e)? exclusive;
 
   late T value;
 
@@ -11,6 +14,7 @@ abstract class Args<T> {
     this.abbr,
     this.description,
     this.hidden = false,
+    this.exclusive,
   });
 }
 
@@ -20,10 +24,11 @@ abstract class ArgsDescription<T> extends Args<T> {
     super.abbr,
     super.description,
     super.hidden,
+    super.exclusive,
   });
 
   String? defaultDescription() => null;
-  String? enumDescription() => null;
+  List<String>? enumDescription() => null;
 }
 
 abstract class OptionArgs<T> extends ArgsDescription<T> {
@@ -42,6 +47,7 @@ abstract class FlagArgs<T> extends ArgsDescription<T> {
     super.aliases,
     super.abbr,
     super.description,
+    super.exclusive,
   });
   T parse(bool? input);
 }
