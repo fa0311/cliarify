@@ -67,7 +67,7 @@ mixin StringParser {
   int? get minLength;
   int? get maxLength;
   RegExp? get pattern;
-  bool Function(String)? get validator;
+  void Function(String)? get validator;
   String Function(String)? get stringify;
 
   String valueToString(String value) {
@@ -91,8 +91,8 @@ mixin StringParser {
 mixin IntParser {
   int? get minValue;
   int? get maxValue;
-  bool Function(String)? get validator;
-  bool Function(int)? get parsedValidator;
+  void Function(String)? get validator;
+  void Function(int)? get parsedValidator;
   String Function(int)? get stringify;
 
   String valueToString(int value) {
@@ -117,7 +117,7 @@ mixin IntParser {
       validator!(input);
     }
     if (parsedValidator != null) {
-      !parsedValidator!(parsed);
+      parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -126,7 +126,7 @@ mixin IntParser {
 mixin DoubleParser {
   double? get minValue;
   double? get maxValue;
-  bool Function(String)? get validator;
+  void Function(String)? get validator;
   bool Function(double)? get parsedValidator;
   String Function(double)? get stringify;
 
@@ -160,10 +160,10 @@ mixin DoubleParser {
 }
 
 mixin NumParser {
-  int? get minValue;
-  int? get maxValue;
-  bool Function(String)? get validator;
-  bool Function(num)? get parsedValidator;
+  num? get minValue;
+  num? get maxValue;
+  void Function(String)? get validator;
+  void Function(num)? get parsedValidator;
   String Function(num)? get stringify;
 
   String valueToString(num value) {
@@ -188,7 +188,7 @@ mixin NumParser {
       validator!(input);
     }
     if (parsedValidator != null) {
-      !parsedValidator!(parsed);
+      parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -197,8 +197,8 @@ mixin NumParser {
 mixin DateTimeParser {
   DateTime? get minValue;
   DateTime? get maxValue;
-  bool Function(String)? get validator;
-  bool Function(DateTime)? get parsedValidator;
+  void Function(String)? get validator;
+  void Function(DateTime)? get parsedValidator;
   String Function(DateTime)? get stringify;
 
   String valueToString(DateTime value) {
@@ -223,7 +223,7 @@ mixin DateTimeParser {
       validator!(input);
     }
     if (parsedValidator != null) {
-      !parsedValidator!(parsed);
+      parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -232,8 +232,8 @@ mixin DateTimeParser {
 mixin MillisecondsDurationParser {
   Duration? get minValue;
   Duration? get maxValue;
-  bool Function(String)? get validator;
-  bool Function(Duration)? get parsedValidator;
+  void Function(String)? get validator;
+  void Function(Duration)? get parsedValidator;
   String Function(Duration)? get stringify;
 
   String valueToString(Duration value) {
@@ -258,7 +258,7 @@ mixin MillisecondsDurationParser {
       validator!(input);
     }
     if (parsedValidator != null) {
-      !parsedValidator!(parsed);
+      parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -267,8 +267,8 @@ mixin MillisecondsDurationParser {
 mixin UriParser {
   List<String>? get schemes;
   bool get allowRelative;
-  bool Function(String)? get validator;
-  bool Function(Uri)? get parsedValidator;
+  void Function(String)? get validator;
+  void Function(Uri)? get parsedValidator;
   String Function(Uri)? get stringify;
 
   String valueToString(Uri value) {
@@ -293,7 +293,7 @@ mixin UriParser {
       validator!(input);
     }
     if (parsedValidator != null) {
-      !parsedValidator!(parsed);
+      parsedValidator!(parsed);
     }
     return parsed;
   }
@@ -301,8 +301,8 @@ mixin UriParser {
 
 mixin EnumParser<T extends Enum> {
   Iterable<T> get allowed;
-  bool Function(String)? get validator;
-  bool Function(T)? get parsedValidator;
+  void Function(String)? get validator;
+  void Function(T)? get parsedValidator;
   String Function(T)? get stringify;
 
   String valueToString(T value) {
@@ -325,7 +325,7 @@ mixin EnumParser<T extends Enum> {
       validator!(input);
     }
     if (parsedValidator != null) {
-      !parsedValidator!(parsed);
+      parsedValidator!(parsed);
     }
     return parsed;
   }
