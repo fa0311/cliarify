@@ -4,9 +4,10 @@ import 'package:cliarify/model/parser.dart';
 class StringOption extends OptionArgs<String>
     with StringParser, DefaultValue<String, String>, SingleValue<String, String, String> {
   StringOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -31,9 +32,10 @@ class StringOption extends OptionArgs<String>
 class NullableStringOption extends OptionArgs<String?>
     with StringParser, NullableValue<String, String>, SingleValue<String, String, String?> {
   NullableStringOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -54,9 +56,10 @@ class NullableStringOption extends OptionArgs<String?>
 
 class IntOption extends OptionArgs<int> with IntParser, DefaultValue<int, String>, SingleValue<int, String, int> {
   IntOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -81,9 +84,10 @@ class IntOption extends OptionArgs<int> with IntParser, DefaultValue<int, String
 class NullableIntOption extends OptionArgs<int?>
     with IntParser, NullableValue<int, String>, SingleValue<int, String, int?> {
   NullableIntOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -106,9 +110,10 @@ class NullableIntOption extends OptionArgs<int?>
 class DoubleOption extends OptionArgs<double>
     with DoubleParser, DefaultValue<double, String>, SingleValue<double, String, double> {
   DoubleOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -133,9 +138,10 @@ class DoubleOption extends OptionArgs<double>
 class NullableDoubleOption extends OptionArgs<double?>
     with DoubleParser, NullableValue<double, String>, SingleValue<double, String, double?> {
   NullableDoubleOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -156,9 +162,10 @@ class NullableDoubleOption extends OptionArgs<double?>
 
 class NumOption extends OptionArgs<num> with NumParser, DefaultValue<num, String>, SingleValue<num, String, num> {
   NumOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -183,9 +190,10 @@ class NumOption extends OptionArgs<num> with NumParser, DefaultValue<num, String
 class NullableNumOption extends OptionArgs<num?>
     with NumParser, NullableValue<num, String>, SingleValue<num, String, num?> {
   NullableNumOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -207,9 +215,10 @@ class NullableNumOption extends OptionArgs<num?>
 class DateTimeOption extends OptionArgs<DateTime>
     with DateTimeParser, DefaultValue<DateTime, String>, SingleValue<DateTime, String, DateTime> {
   DateTimeOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -234,9 +243,10 @@ class DateTimeOption extends OptionArgs<DateTime>
 class NullableDateTimeOption extends OptionArgs<DateTime?>
     with DateTimeParser, NullableValue<DateTime, String>, SingleValue<DateTime, String, DateTime?> {
   NullableDateTimeOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -258,9 +268,10 @@ class NullableDateTimeOption extends OptionArgs<DateTime?>
 class MillisecondsDurationOption extends OptionArgs<Duration>
     with MillisecondsDurationParser, DefaultValue<Duration, String>, SingleValue<Duration, String, Duration> {
   MillisecondsDurationOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -285,9 +296,10 @@ class MillisecondsDurationOption extends OptionArgs<Duration>
 class NullableMillisecondsDurationOption extends OptionArgs<Duration?>
     with MillisecondsDurationParser, NullableValue<Duration, String>, SingleValue<Duration, String, Duration?> {
   NullableMillisecondsDurationOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -308,9 +320,10 @@ class NullableMillisecondsDurationOption extends OptionArgs<Duration?>
 
 class UriOption extends OptionArgs<Uri> with UriParser, DefaultValue<Uri, String>, SingleValue<Uri, String, Uri> {
   UriOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.schemes,
     this.allowRelative = false,
     this.validator,
@@ -336,9 +349,10 @@ class UriOption extends OptionArgs<Uri> with UriParser, DefaultValue<Uri, String
 class NullableUriOption extends OptionArgs<Uri?>
     with UriParser, NullableValue<Uri, String>, SingleValue<Uri, String, Uri?> {
   NullableUriOption({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     this.schemes,
     this.allowRelative = false,
     this.validator,
@@ -361,10 +375,11 @@ class NullableUriOption extends OptionArgs<Uri?>
 class EnumOption<T extends Enum> extends OptionArgs<T>
     with EnumParser<T>, DefaultValue<T, String>, SingleValue<T, String, T> {
   EnumOption({
+    super.description,
+    super.hidden,
     required this.allowed,
     super.aliases,
     super.abbr,
-    super.description,
     this.validator,
     this.parsedValidator,
     this.stringify,
@@ -385,10 +400,11 @@ class EnumOption<T extends Enum> extends OptionArgs<T>
 class NullableEnumOption<T extends Enum> extends OptionArgs<T?>
     with EnumParser<T>, NullableValue<T, String>, SingleValue<T, String, T?> {
   NullableEnumOption({
+    super.description,
+    super.hidden,
     required this.allowed,
     super.aliases,
     super.abbr,
-    super.description,
     this.validator,
     this.parsedValidator,
     this.stringify,

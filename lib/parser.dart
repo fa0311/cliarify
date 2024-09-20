@@ -167,20 +167,21 @@ class CliarifyParser {
 
     for (final (key, value) in fields.tuple) {
       try {
-        if (value is OptionArgs) {
+        if (value is SubCommand) {
+        } else if (value is OptionArgs) {
           final data = results.options.contains(key) ? results.option(key) : null;
           value.value = value.parse(data);
         } else if (value is FlagArgs) {
           final data = results.options.contains(key) ? results.flag(key) : null;
           value.value = value.parse(data);
         } else if (value is MultiOptionArgs) {
-          final data = results.options.contains(key) ? results.multiOption(key) : null;
+          final data = results.options.contains(key) ? results.multiOption(key) : <String>[];
           value.value = value.parse(data);
         } else if (value is PositionalArgs) {
           final data = rest.isNotEmpty ? rest.removeFirst() : null;
           value.value = value.parse(data);
         } else if (value is RestArgs) {
-          final data = List.generate(rest.length, (_) => rest.removeFirst());
+          final data = rest.isNotEmpty ? List.generate(rest.length, (_) => rest.removeFirst()) : <String>[];
           value.value = value.parse(data);
         } else {
           throw ArgumentError('Invalid field type');

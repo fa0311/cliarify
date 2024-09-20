@@ -3,9 +3,10 @@ import 'package:cliarify/model/parser.dart';
 
 class BoolFlag extends FlagArgs<bool> with DefaultValue<bool, bool>, SingleValue<bool, bool, bool> {
   BoolFlag({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     super.exclusive,
     super.negatable = false,
     this.defaultsTo = false,
@@ -22,9 +23,10 @@ class BoolFlag extends FlagArgs<bool> with DefaultValue<bool, bool>, SingleValue
 
 class NullableBoolFlag extends FlagArgs<bool?> with NullableValue<bool?, bool>, SingleValue<bool?, bool, bool?> {
   NullableBoolFlag({
+    super.description,
+    super.hidden,
     super.aliases,
     super.abbr,
-    super.description,
     super.exclusive,
     super.negatable = false,
   });

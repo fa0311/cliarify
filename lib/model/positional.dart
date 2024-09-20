@@ -1,9 +1,11 @@
 import 'package:cliarify/model/base.dart';
 import 'package:cliarify/model/parser.dart';
 
-class StringPositional extends PositionalArgs<String>
+class StringPositionalArgs extends PositionalArgs<String>
     with StringParser, DefaultValue<String, String>, SingleValue<String, String, String> {
-  StringPositional({
+  StringPositionalArgs({
+    super.description,
+    super.hidden,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -25,9 +27,11 @@ class StringPositional extends PositionalArgs<String>
   final String? defaultsTo;
 }
 
-class NullableStringPositional extends PositionalArgs<String?>
+class NullableStringPositionalArgs extends PositionalArgs<String?>
     with StringParser, NullableValue<String, String>, SingleValue<String, String, String?> {
-  NullableStringPositional({
+  NullableStringPositionalArgs({
+    super.description,
+    super.hidden,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -46,9 +50,11 @@ class NullableStringPositional extends PositionalArgs<String?>
   final String Function(String input)? stringify;
 }
 
-class IntPositional extends PositionalArgs<int>
+class IntPositionalArgs extends PositionalArgs<int>
     with IntParser, DefaultValue<int, String>, SingleValue<int, String, int> {
-  IntPositional({
+  IntPositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -70,9 +76,11 @@ class IntPositional extends PositionalArgs<int>
   String Function(int input)? stringify;
 }
 
-class NullableIntPositional extends PositionalArgs<int?>
+class NullableIntPositionalArgs extends PositionalArgs<int?>
     with IntParser, NullableValue<int, String>, SingleValue<int, String, int?> {
-  NullableIntPositional({
+  NullableIntPositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -91,9 +99,11 @@ class NullableIntPositional extends PositionalArgs<int?>
   String Function(int input)? stringify;
 }
 
-class DoublePositional extends PositionalArgs<double>
+class DoublePositionalArgs extends PositionalArgs<double>
     with DoubleParser, DefaultValue<double, String>, SingleValue<double, String, double> {
-  DoublePositional({
+  DoublePositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -115,9 +125,11 @@ class DoublePositional extends PositionalArgs<double>
   String Function(double input)? stringify;
 }
 
-class NullableDoublePositional extends PositionalArgs<double?>
+class NullableDoublePositionalArgs extends PositionalArgs<double?>
     with DoubleParser, NullableValue<double, String>, SingleValue<double, String, double?> {
-  NullableDoublePositional({
+  NullableDoublePositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -136,9 +148,11 @@ class NullableDoublePositional extends PositionalArgs<double?>
   String Function(double input)? stringify;
 }
 
-class NumPositional extends PositionalArgs<num>
+class NumPositionalArgs extends PositionalArgs<num>
     with NumParser, DefaultValue<num, String>, SingleValue<num, String, num> {
-  NumPositional({
+  NumPositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -160,9 +174,11 @@ class NumPositional extends PositionalArgs<num>
   String Function(num input)? stringify;
 }
 
-class NullableNumPositional extends PositionalArgs<num?>
+class NullableNumPositionalArgs extends PositionalArgs<num?>
     with NumParser, NullableValue<num, String>, SingleValue<num, String, num?> {
-  NullableNumPositional({
+  NullableNumPositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -181,9 +197,11 @@ class NullableNumPositional extends PositionalArgs<num?>
   String Function(num input)? stringify;
 }
 
-class DateTimePositional extends PositionalArgs<DateTime>
+class DateTimePositionalArgs extends PositionalArgs<DateTime>
     with DateTimeParser, DefaultValue<DateTime, String>, SingleValue<DateTime, String, DateTime> {
-  DateTimePositional({
+  DateTimePositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -205,9 +223,11 @@ class DateTimePositional extends PositionalArgs<DateTime>
   String Function(DateTime input)? stringify;
 }
 
-class NullableDateTimePositional extends PositionalArgs<DateTime?>
+class NullableDateTimePositionalArgs extends PositionalArgs<DateTime?>
     with DateTimeParser, NullableValue<DateTime, String>, SingleValue<DateTime, String, DateTime?> {
-  NullableDateTimePositional({
+  NullableDateTimePositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -226,9 +246,11 @@ class NullableDateTimePositional extends PositionalArgs<DateTime?>
   String Function(DateTime input)? stringify;
 }
 
-class MillisecondsDurationPositional extends PositionalArgs<Duration>
+class MillisecondsDurationPositionalArgs extends PositionalArgs<Duration>
     with MillisecondsDurationParser, DefaultValue<Duration, String>, SingleValue<Duration, String, Duration> {
-  MillisecondsDurationPositional({
+  MillisecondsDurationPositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -250,9 +272,11 @@ class MillisecondsDurationPositional extends PositionalArgs<Duration>
   String Function(Duration input)? stringify;
 }
 
-class NullableMillisecondsDurationPositional extends PositionalArgs<Duration?>
+class NullableMillisecondsDurationPositionalArgs extends PositionalArgs<Duration?>
     with MillisecondsDurationParser, NullableValue<Duration, String>, SingleValue<Duration, String, Duration?> {
-  NullableMillisecondsDurationPositional({
+  NullableMillisecondsDurationPositionalArgs({
+    super.description,
+    super.hidden,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -271,9 +295,11 @@ class NullableMillisecondsDurationPositional extends PositionalArgs<Duration?>
   String Function(Duration input)? stringify;
 }
 
-class UriPositional extends PositionalArgs<Uri>
+class UriPositionalArgs extends PositionalArgs<Uri>
     with UriParser, DefaultValue<Uri, String>, SingleValue<Uri, String, Uri> {
-  UriPositional({
+  UriPositionalArgs({
+    super.description,
+    super.hidden,
     this.schemes,
     this.allowRelative = false,
     this.validator,
@@ -295,9 +321,11 @@ class UriPositional extends PositionalArgs<Uri>
   String Function(Uri input)? stringify;
 }
 
-class NullableUriPositional extends PositionalArgs<Uri?>
+class NullableUriPositionalArgs extends PositionalArgs<Uri?>
     with UriParser, NullableValue<Uri, String>, SingleValue<Uri, String, Uri?> {
-  NullableUriPositional({
+  NullableUriPositionalArgs({
+    super.description,
+    super.hidden,
     this.schemes,
     this.allowRelative = false,
     this.validator,
@@ -316,11 +344,12 @@ class NullableUriPositional extends PositionalArgs<Uri?>
   String Function(Uri input)? stringify;
 }
 
-class EnumPositional<T extends Enum> extends PositionalArgs<T>
+class EnumPositionalArgs<T extends Enum> extends PositionalArgs<T>
     with EnumParser<T>, DefaultValue<T, String>, SingleValue<T, String, T> {
-  EnumPositional({
-    required this.allowed,
+  EnumPositionalArgs({
     super.description,
+    super.hidden,
+    required this.allowed,
     this.validator,
     this.parsedValidator,
     this.stringify,
@@ -338,11 +367,12 @@ class EnumPositional<T extends Enum> extends PositionalArgs<T>
   String Function(T input)? stringify;
 }
 
-class NullableEnumPositional<T extends Enum> extends PositionalArgs<T?>
+class NullableEnumPositionalArgs<T extends Enum> extends PositionalArgs<T?>
     with EnumParser<T>, NullableValue<T, String>, SingleValue<T, String, T?> {
-  NullableEnumPositional({
-    required this.allowed,
+  NullableEnumPositionalArgs({
     super.description,
+    super.hidden,
+    required this.allowed,
     this.validator,
     this.parsedValidator,
     this.stringify,

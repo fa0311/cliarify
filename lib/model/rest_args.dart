@@ -1,13 +1,11 @@
 import 'package:cliarify/model/base.dart';
 import 'package:cliarify/model/parser.dart';
 
-class StringMultiOption extends MultiOptionArgs<List<String>>
+class StringRestArgs extends RestArgs<List<String>>
     with DefaultValue<List<String>, List<String>>, StringParser, ListValue<String, String, List<String>> {
-  StringMultiOption({
+  StringRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.minLength,
     this.maxLength,
     this.pattern,
@@ -32,13 +30,11 @@ class StringMultiOption extends MultiOptionArgs<List<String>>
   final String Function(List<String> input)? listStringify;
 }
 
-class IntMultiOption extends MultiOptionArgs<List<int>>
+class IntRestArgs extends RestArgs<List<int>>
     with DefaultValue<List<int>, List<String>>, IntParser, ListValue<int, String, List<int>> {
-  IntMultiOption({
+  IntRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -63,13 +59,11 @@ class IntMultiOption extends MultiOptionArgs<List<int>>
   String Function(List<int> input)? listStringify;
 }
 
-class DoubleMultiOption extends MultiOptionArgs<List<double>>
+class DoubleRestArgs extends RestArgs<List<double>>
     with DefaultValue<List<double>, List<String>>, DoubleParser, ListValue<double, String, List<double>> {
-  DoubleMultiOption({
+  DoubleRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -95,13 +89,11 @@ class DoubleMultiOption extends MultiOptionArgs<List<double>>
   final String Function(List<double> input)? listStringify;
 }
 
-class NumMultiOption extends MultiOptionArgs<List<num>>
+class NumRestArgs extends RestArgs<List<num>>
     with DefaultValue<List<num>, List<String>>, NumParser, ListValue<num, String, List<num>> {
-  NumMultiOption({
+  NumRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -115,24 +107,22 @@ class NumMultiOption extends MultiOptionArgs<List<num>>
   @override
   final num? maxValue;
   @override
-  final List<num>? defaultsTo;
-  @override
   final bool Function(String)? validator;
   @override
   final bool Function(num)? parsedValidator;
   @override
-  final String Function(num input)? stringify;
+  final List<num>? defaultsTo;
   @override
-  final String Function(List<num> input)? listStringify;
+  String Function(num input)? stringify;
+  @override
+  String Function(List<num> input)? listStringify;
 }
 
-class DateTimeMultiOption extends MultiOptionArgs<List<DateTime>>
+class DateTimeRestArgs extends RestArgs<List<DateTime>>
     with DefaultValue<List<DateTime>, List<String>>, DateTimeParser, ListValue<DateTime, String, List<DateTime>> {
-  DateTimeMultiOption({
+  DateTimeRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -157,16 +147,14 @@ class DateTimeMultiOption extends MultiOptionArgs<List<DateTime>>
   final String Function(List<DateTime> input)? listStringify;
 }
 
-class MillisecondsDurationMultiOption extends MultiOptionArgs<List<Duration>>
+class MillisecondsDurationRestArgs extends RestArgs<List<Duration>>
     with
         DefaultValue<List<Duration>, List<String>>,
         MillisecondsDurationParser,
         ListValue<Duration, String, List<Duration>> {
-  MillisecondsDurationMultiOption({
+  MillisecondsDurationRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.minValue,
     this.maxValue,
     this.validator,
@@ -191,13 +179,11 @@ class MillisecondsDurationMultiOption extends MultiOptionArgs<List<Duration>>
   final String Function(List<Duration> input)? listStringify;
 }
 
-class UriMultiOption extends MultiOptionArgs<List<Uri>>
+class UriRestArgs extends RestArgs<List<Uri>>
     with DefaultValue<List<Uri>, List<String>>, UriParser, ListValue<Uri, String, List<Uri>> {
-  UriMultiOption({
+  UriRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.schemes,
     this.allowRelative = false,
     this.validator,
@@ -222,13 +208,11 @@ class UriMultiOption extends MultiOptionArgs<List<Uri>>
   final String Function(List<Uri> input)? listStringify;
 }
 
-class EnumMultiOption<T extends Enum> extends MultiOptionArgs<List<T>>
+class EnumRestArgs<T extends Enum> extends RestArgs<List<T>>
     with DefaultValue<List<T>, List<String>>, EnumParser<T>, ListValue<T, String, List<T>> {
-  EnumMultiOption({
+  EnumRestArgs({
     super.description,
     super.hidden,
-    super.aliases,
-    super.abbr,
     this.allowed = const [],
     this.validator,
     this.parsedValidator,

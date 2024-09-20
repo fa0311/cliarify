@@ -24,11 +24,12 @@ class SubCommand extends Args<CliarifyBase> {
 abstract class PositionalArgs<T> extends Args<T> {
   PositionalArgs({
     super.description,
+    super.hidden,
   });
   T parse(String? input);
 }
 
-abstract class RestArgs<T> extends Args<List<T>> {
+abstract class RestArgs<T> extends Args<T> {
   RestArgs({
     super.description,
     super.hidden,
@@ -58,6 +59,7 @@ abstract class OptionArgs<T> extends ArgsDescription<T> {
     super.aliases,
     super.abbr,
     super.description,
+    super.hidden,
   });
   T parse(String? input);
 }
@@ -69,6 +71,7 @@ abstract class FlagArgs<T> extends ArgsDescription<T> {
     super.aliases,
     super.abbr,
     super.description,
+    super.hidden,
     super.exclusive,
   });
   T parse(bool? input);
@@ -79,6 +82,7 @@ abstract class MultiOptionArgs<T> extends ArgsDescription<List<T>> {
     super.aliases,
     super.abbr,
     super.description,
+    super.hidden,
   });
   T parse(List<String>? input);
 }

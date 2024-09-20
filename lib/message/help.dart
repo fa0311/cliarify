@@ -13,7 +13,7 @@ class CliarifyHelpPrinterMessage {
     for (final (key, value) in fields.tuple) {
       if (!value.hidden && value is PositionalArgs) {
         final description = value.description;
-        line.add(["$key  ", description ?? '']);
+        line.add(["  $key  ", description ?? '']);
       }
     }
     return tableParse(line);
@@ -24,7 +24,7 @@ class CliarifyHelpPrinterMessage {
     for (final (key, value) in fields.tuple) {
       if (!value.hidden && value is SubCommand) {
         final description = value.value.cliarifyDescription;
-        line.add(["$key  ", description ?? '']);
+        line.add(["  $key  ", description ?? '']);
       }
     }
     return tableParse(line);
